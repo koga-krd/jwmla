@@ -1,258 +1,1068 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ku" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>jwmla — Modern Luxury Shopping</title>
-<meta name="description" content="jwmla — a modern luxury shopping destination. Browse the collection, call or message us anytime." />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>ماڵی عەلاقی</title>
+<meta name="theme-color" content="#0D3B66">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-base:#0A2540;
+    --navy-primary:#0D3B66;
+    --navy-grad-1:#0B1E36;
+    --navy-grad-2:#134074;
+    --accent-purple:#5B2D8C;
+    --accent-purple-dark:#4A2270;
+    --white:#FFFFFF;
+    --card-bg:#FFFFFF;
+    --page-bg:#F4F6F9;
+    --card-border:#E7ECF2;
+    --text:#0A2540;
+    --muted:#7C8CA0;
+    --danger:#DC2626;
+    --green:#16A34A;
+    --green-dark:#0F7A38;
+    --radius:20px;
+    --shadow:0 4px 16px rgba(10,37,64,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Noto Kufi Arabic','Segoe UI',sans-serif;
+    background:var(--page-bg);
+    color:var(--text);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:88px; /* clears the fixed bottom nav */
+  }
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
 
-<!-- Favicon (simple black square, swap for a real logo file if you have one) -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a0a0a'/%3E%3C/svg%3E" />
+  /* ===== Header (title + icon only — no menu/cart buttons here) ===== */
+  .topbar{
+    background:linear-gradient(135deg,var(--navy-grad-1),var(--navy-grad-2));
+    padding:18px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:12px;
+    position:sticky;
+    top:0;
+    z-index:40;
+    box-shadow:0 2px 14px rgba(10,37,64,0.35);
+  }
+  .brand{display:flex;align-items:center;gap:10px;color:#fff;}
+  .brand-name{font-size:22px;font-weight:800;letter-spacing:.2px;}
+  .brand-icon{
+    width:42px;height:42px;flex-shrink:0;
+    background:rgba(255,255,255,0.16);
+    border:1px solid rgba(255,255,255,0.35);
+    border-radius:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
 
-<!-- Fonts: Fraunces (editorial serif for display) + Inter (clean sans for UI) + Noto Sans Arabic (KU/AR script support) -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  /* ===== Pages ===== */
+  .page{display:none;}
+  .page.active{display:block;}
 
-<link rel="stylesheet" href="style.css" />
+  /* ===== Search (Home page) ===== */
+  .subbar{max-width:1100px;margin:0 auto;padding:16px 16px 0;}
+  .search-wrap{position:relative;}
+  .search-wrap input{
+    width:100%;
+    padding:14px 46px 14px 16px;
+    border-radius:16px;
+    border:1px solid var(--card-border);
+    background:#fff;
+    font-size:15px;outline:none;
+    box-shadow:var(--shadow);
+  }
+  .search-wrap input:focus{border-color:var(--navy-primary);}
+  .search-wrap svg{position:absolute;top:50%;right:16px;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+
+  /* ===== Section tabs ===== */
+  .tabs{max-width:1100px;margin:14px auto 0;padding:0 16px;display:flex;gap:10px;}
+  .tab-btn{
+    flex:1;padding:13px 10px;border-radius:18px;
+    border:1px solid var(--card-border);background:#fff;
+    color:var(--navy-primary);font-weight:700;font-size:14.5px;
+  }
+  .tab-btn.active{background:var(--navy-primary);color:#fff;border-color:var(--navy-primary);}
+
+  /* ===== Category chips ===== */
+  .cat-scroll-wrap{max-width:1100px;margin:14px auto 0;padding:0 16px;}
+  .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
+  .cat-scroll::-webkit-scrollbar{display:none;}
+  .cat-chip{
+    flex-shrink:0;padding:10px 20px;border-radius:999px;
+    border:1px solid var(--card-border);background:#fff;
+    color:var(--text);font-size:13.5px;font-weight:700;white-space:nowrap;
+  }
+  .cat-chip.active{background:var(--navy-primary);border-color:var(--navy-primary);color:#fff;}
+
+  /* ===== Grid ===== */
+  .grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:16px;}
+  @media (min-width:600px){ .grid{grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:900px){ .grid{grid-template-columns:repeat(4,1fr);} }
+
+  .card{
+    background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:12px;display:flex;flex-direction:column;
+  }
+  .card-media{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#fff;}
+  .card-media img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+  .card-admin-actions{position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:6px;z-index:5;}
+  .mini-btn{
+    width:30px;height:30px;border-radius:999px;border:none;
+    background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+  }
+  .mini-btn.edit{color:var(--navy-primary);}
+  .mini-btn.delete{color:var(--danger);}
+  .card-title{margin-top:10px;font-size:14px;font-weight:700;color:var(--text);line-height:1.4;min-height:20px;}
+  .card-badge-row{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;margin-top:4px;}
+  .card-badge-row svg{flex-shrink:0;}
+  .card-bottom-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px;}
+  .card-price{font-size:17px;font-weight:800;color:var(--navy-primary);white-space:nowrap;}
+  .card-price.offer{color:var(--danger);}
+  .card-add-btn{
+    width:40px;height:40px;flex-shrink:0;border-radius:13px;border:none;
+    background:var(--accent-purple);color:#fff;font-size:22px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;line-height:1;
+  }
+  .card-add-btn:active{background:var(--accent-purple-dark);}
+
+  .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);}
+  .empty-state svg{margin-bottom:10px;color:var(--card-border);}
+  .empty-state p{font-size:16px;font-weight:600;}
+
+  /* ===== Cart page ===== */
+  .page-inner{max-width:700px;margin:0 auto;padding:18px 16px;}
+  .page-heading{font-size:20px;font-weight:800;color:var(--navy-primary);margin:0 0 16px;}
+  .cart-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px dashed var(--card-border);}
+  .cart-item img{width:58px;height:58px;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--page-bg);}
+  .cart-item-info{flex:1;min-width:0;}
+  .cart-item-name{font-size:14.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cart-item-price{font-size:13px;color:var(--muted);margin-top:2px;}
+  .qty-stepper{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .qty-btn{width:30px;height:30px;border-radius:9px;border:1px solid var(--card-border);background:#fff;color:var(--navy-primary);font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;}
+  .qty-val{min-width:20px;text-align:center;font-weight:700;}
+  .cart-remove-btn{width:32px;height:32px;border-radius:999px;border:none;background:var(--page-bg);color:var(--danger);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .cart-empty{text-align:center;color:var(--muted);padding:50px 10px;font-size:14.5px;}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:16px 4px;font-weight:800;font-size:17px;border-top:1px solid var(--card-border);margin-top:6px;}
+
+  .btn{width:100%;padding:14px;border-radius:14px;border:none;font-weight:700;font-size:15px;}
+  .btn-primary{background:var(--navy-primary);color:#fff;}
+  .btn-primary:disabled{opacity:0.6;}
+  .btn-secondary{background:#fff;border:1px solid var(--card-border);color:var(--navy-primary);}
+  .btn-whatsapp{background:var(--green);color:#fff;}
+  .btn-whatsapp:disabled{opacity:0.6;}
+  .btn-danger{background:#fff;border:1px solid var(--danger);color:var(--danger);}
+
+  /* ===== Account page ===== */
+  .lang-switch-row{display:flex;gap:10px;margin-bottom:22px;}
+  .lang-btn{flex:1;padding:13px;border-radius:14px;border:1px solid var(--card-border);background:#fff;color:var(--text);font-weight:700;font-size:14.5px;}
+  .lang-btn.active{background:var(--navy-primary);border-color:var(--navy-primary);color:#fff;}
+
+  .account-card{background:#fff;border:1px solid var(--card-border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:18px;}
+  .account-card h3{margin:0 0 14px;font-size:16px;color:var(--navy-primary);}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
+  .field input[type=text],.field input[type=number],.field input[type=url],
+  .field input[type=email],.field input[type=password],.field select,.field textarea{
+    width:100%;padding:12px 13px;border:1px solid var(--card-border);border-radius:11px;
+    font-size:15px;outline:none;background:#fbfdff;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--navy-primary);background:#fff;}
+  .field textarea{min-height:70px;resize:vertical;}
+  .req{color:var(--danger);}
+  .radio-row{display:flex;gap:10px;}
+  .radio-opt{flex:1;border:1px solid var(--card-border);border-radius:11px;padding:11px;text-align:center;font-weight:700;font-size:13.5px;color:var(--muted);}
+  .radio-opt.selected{background:var(--navy-primary);color:#fff;border-color:var(--navy-primary);}
+  .radio-opt input{display:none;}
+  .cat-row{display:flex;gap:8px;}
+  .cat-row select{flex:1;}
+  .cat-row button{flex-shrink:0;width:46px;border-radius:11px;border:1px solid var(--card-border);background:var(--page-bg);color:var(--navy-primary);font-size:20px;font-weight:700;}
+  .img-preview{
+    width:100%;aspect-ratio:16/9;border-radius:12px;background:var(--page-bg);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px;color:var(--muted);font-size:13px;
+  }
+  .img-preview img{width:100%;height:100%;object-fit:cover;}
+  .form-actions{display:flex;gap:10px;margin-top:8px;}
+  .logged-in-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;}
+  .logged-in-email{font-size:13.5px;color:var(--muted);word-break:break-all;}
+
+  /* ===== Sticky bottom nav ===== */
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;right:0;
+    background:linear-gradient(135deg,var(--navy-grad-1),var(--navy-grad-2));
+    display:flex;
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+    z-index:50;
+    box-shadow:0 -2px 14px rgba(10,37,64,0.3);
+  }
+  .nav-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+    background:none;border:none;color:rgba(255,255,255,0.65);
+    padding:6px 4px;border-radius:12px;position:relative;font-size:11.5px;font-weight:700;
+  }
+  .nav-btn.active{color:#fff;}
+  .nav-btn .badge{
+    position:absolute;top:0;left:calc(50% + 6px);
+    min-width:17px;height:17px;border-radius:999px;background:var(--danger);color:#fff;
+    font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;
+    padding:0 4px;border:2px solid var(--navy-grad-1);
+  }
+</style>
 </head>
 <body>
 
-<!-- ============ HEADER ============ -->
-<header class="site-header" id="siteHeader">
-  <div class="header-row">
-    <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-
-    <a href="#top" class="logo" data-i18n="brand">jwmla</a>
-
-    <div class="header-actions">
-      <button class="icon-btn search-toggle" id="searchToggle" aria-label="Search">
-        <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-
-      <div class="lang-switch" role="group" aria-label="Language">
-        <button class="lang-btn active" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="ku">KU</button>
-        <button class="lang-btn" data-lang="ar">AR</button>
-      </div>
-    </div>
+<!-- ===== Header: title + icon ONLY (no menu / cart buttons) ===== -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-name">ماڵی عەلاقی</span>
+    <span class="brand-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 21V13h6v8"/></svg>
+    </span>
   </div>
-
-  <!-- Expandable search bar -->
-  <div class="search-bar" id="searchBar">
-    <input type="search" id="searchInput" placeholder="Search products…" data-i18n-placeholder="searchPlaceholder" autocomplete="off" />
-    <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  </div>
-
-  <!-- Category menu -->
-  <nav class="category-nav" id="categoryNav" aria-label="Categories">
-    <div class="category-track" id="categoryTrack">
-      <button class="chip active" data-category="all" data-i18n="all">All</button>
-      <!-- Category chips injected by script.js -->
-    </div>
-  </nav>
 </header>
 
-<!-- ============ HERO ============ -->
-<section class="hero" id="top">
-  <div class="hero-inner">
-    <p class="hero-eyebrow" data-i18n="heroEyebrow">The Collection</p>
-    <h1 class="hero-title" id="heroTitle">
-      <span class="reveal-letters" data-text="jwmla">jwmla</span>
-    </h1>
-    <div class="hero-line" aria-hidden="true"></div>
-    <p class="hero-sub" data-i18n="heroSub">Considered pieces. Honest prices. Delivered with care.</p>
-    <a href="#shop" class="btn btn-primary hero-cta" data-i18n="heroCta">Shop the collection</a>
-  </div>
-</section>
-
-<!-- Marquee strip -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <span data-i18n="marquee1">NEW ARRIVALS WEEKLY</span><span>—</span>
-    <span data-i18n="marquee2">FAST LOCAL DELIVERY</span><span>—</span>
-    <span data-i18n="marquee3">CALL OR WHATSAPP US ANYTIME</span><span>—</span>
-    <span data-i18n="marquee1">NEW ARRIVALS WEEKLY</span><span>—</span>
-    <span data-i18n="marquee2">FAST LOCAL DELIVERY</span><span>—</span>
-    <span data-i18n="marquee3">CALL OR WHATSAPP US ANYTIME</span><span>—</span>
-  </div>
-</div>
-
-<!-- ============ SHOP / PRODUCT GRID ============ -->
-<main id="shop" class="shop-section">
-  <div class="shop-header">
-    <h2 class="section-title" data-i18n="shopTitle">Shop</h2>
-    <p class="product-count" id="productCount"></p>
-  </div>
-
-  <div class="product-grid" id="productGrid">
-    <!-- Skeleton loaders shown until Firestore responds -->
-    <div class="skeleton-card"></div>
-    <div class="skeleton-card"></div>
-    <div class="skeleton-card"></div>
-    <div class="skeleton-card"></div>
-  </div>
-
-  <div class="empty-state" id="emptyState" hidden>
-    <p data-i18n="emptyTitle">Nothing here yet</p>
-    <span data-i18n="emptySub">Products you add will appear on this page.</span>
-  </div>
-</main>
-
-<!-- ============ CONTACT STRIP ============ -->
-<section class="contact-strip">
-  <div class="contact-inner">
-    <div class="contact-text">
-      <p class="contact-eyebrow" data-i18n="contactEyebrow">Talk to us</p>
-      <a class="contact-phone" href="tel:07508457841">07508457841</a>
-    </div>
-    <div class="contact-buttons">
-      <a class="btn btn-call" href="tel:07508457841">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.9c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
-        <span data-i18n="callNow">Call Now</span>
-      </a>
-      <a class="btn btn-whatsapp" href="https://wa.me/9647508457841" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20.5 3.5A11 11 0 0 0 3.2 17.4L2 22l4.7-1.2A11 11 0 1 0 20.5 3.5zM12 20a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.5-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-1.4-.7-2.3-1.2-3.2-2.8-.2-.4.2-.4.6-1.2.1-.2 0-.4 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 3 4.7 4.1.7.3 1.2.4 1.6.5.7.2 1.3.2 1.8.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.5-.3z"/></svg>
-        <span data-i18n="whatsapp">WhatsApp</span>
-      </a>
+<!-- ===== PAGE 1: HOME ===== -->
+<div class="page active" id="pageHome">
+  <div class="subbar">
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="گەڕان بۆ کاڵا...">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     </div>
   </div>
-</section>
 
-<!-- ============ FOOTER ============ -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">jwmla</div>
-    <p class="footer-note" data-i18n="footerNote">A modern shopping experience, built with care.</p>
-    <p class="footer-phone">
-      <span data-i18n="footerCallLabel">Call or WhatsApp:</span>
-      <a href="tel:07508457841">07508457841</a>
-    </p>
-    <button class="admin-link" id="adminEntryBtn" data-i18n="addProduct">+ Add Product</button>
+  <div class="tabs">
+    <button class="tab-btn active" id="tabMain" data-section="main">بەشی سەرەکی</button>
+    <button class="tab-btn" id="tabOffers" data-section="offers">بەشی ئۆفەر</button>
   </div>
-</footer>
 
-<!-- Floating contact buttons (persistent on every screen) -->
-<div class="fab-stack" aria-label="Quick contact">
-  <a class="fab fab-whatsapp" href="https://wa.me/9647508457841" target="_blank" rel="noopener" aria-label="WhatsApp">
-    <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M20.5 3.5A11 11 0 0 0 3.2 17.4L2 22l4.7-1.2A11 11 0 1 0 20.5 3.5zM12 20a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.5-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-1.4-.7-2.3-1.2-3.2-2.8-.2-.4.2-.4.6-1.2.1-.2 0-.4 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 1.9 3 4.7 4.1.7.3 1.2.4 1.6.5.7.2 1.3.2 1.8.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.5-.3z"/></svg>
-  </a>
-  <a class="fab fab-call" href="tel:07508457841" aria-label="Call now">
-    <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.9c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
-  </a>
-</div>
-
-<!-- ============ PRODUCT DETAIL MODAL ============ -->
-<div class="modal-overlay" id="productModalOverlay" hidden>
-  <div class="modal product-modal" role="dialog" aria-modal="true" aria-labelledby="pmName">
-    <button class="modal-close" id="productModalClose" aria-label="Close">&times;</button>
-    <div class="pm-gallery">
-      <div class="pm-main-image-wrap">
-        <img id="pmMainImage" class="pm-main-image" src="" alt="" />
-        <span class="badge badge-new" id="pmNewBadge" hidden data-i18n="new">New</span>
-        <span class="badge badge-sold" id="pmSoldBadge" hidden data-i18n="soldOut">Sold out</span>
-      </div>
-      <div class="pm-thumbs" id="pmThumbs"></div>
-    </div>
-    <div class="pm-info">
-      <p class="pm-category" id="pmCategory"></p>
-      <h2 class="pm-name" id="pmName"></h2>
-      <p class="pm-price" id="pmPrice"></p>
-      <p class="pm-availability" id="pmAvailability"></p>
-      <p class="pm-description" id="pmDescription"></p>
-
-      <div class="pm-actions">
-        <a class="btn btn-call" href="tel:07508457841">
-          <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.9c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
-          <span data-i18n="callToOrder">Call to order</span>
-        </a>
-        <a class="btn btn-whatsapp" href="https://wa.me/9647508457841" target="_blank" rel="noopener">
-          <span data-i18n="whatsapp">WhatsApp</span>
-        </a>
-      </div>
-
-      <div class="pm-admin-actions">
-        <button class="btn btn-ghost" id="pmEditBtn" data-i18n="edit">Edit</button>
-        <button class="btn btn-ghost btn-danger" id="pmDeleteBtn" data-i18n="delete">Delete</button>
-      </div>
+  <div class="cat-scroll-wrap">
+    <div class="cat-scroll" id="catScroll">
+      <button class="cat-chip active" data-cat="all">هەمووی</button>
     </div>
   </div>
+
+  <div class="grid" id="grid"></div>
 </div>
 
-<!-- ============ PASSWORD GATE MODAL ============ -->
-<div class="modal-overlay" id="passwordModalOverlay" hidden>
-  <div class="modal password-modal" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
-    <button class="modal-close" id="passwordModalClose" aria-label="Close">&times;</button>
-    <h3 id="pwTitle" data-i18n="adminAccess">Admin access</h3>
-    <p class="pw-sub" data-i18n="adminAccessSub">Enter the admin password to continue.</p>
-    <form id="passwordForm">
-      <input type="password" id="passwordInput" data-i18n-placeholder="password" placeholder="Password" autocomplete="off" required />
-      <p class="pw-error" id="passwordError" hidden data-i18n="wrongPassword">Incorrect password. Try again.</p>
-      <button type="submit" class="btn btn-primary" data-i18n="confirm">Confirm</button>
-    </form>
+<!-- ===== PAGE 2: CART ===== -->
+<div class="page" id="pageCart">
+  <div class="page-inner">
+    <h2 class="page-heading" id="cartTitle">سەبەتەی کڕین</h2>
+    <div id="cartList"></div>
+    <div class="cart-total-row">
+      <span id="cartTotalLabel">کۆی گشتی</span>
+      <span id="cartTotalValue">0 IQD</span>
+    </div>
+    <button type="button" class="btn btn-whatsapp" id="cartOrderWa">داواکردن لە ڕێی واتساپ</button>
   </div>
 </div>
 
-<!-- ============ ADD / EDIT PRODUCT MODAL ============ -->
-<div class="modal-overlay" id="editModalOverlay" hidden>
-  <div class="modal edit-modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
-    <button class="modal-close" id="editModalClose" aria-label="Close">&times;</button>
-    <h3 id="editTitle" data-i18n="addProduct">+ Add Product</h3>
+<!-- ===== PAGE 3: ACCOUNT ===== -->
+<div class="page" id="pageAccount">
+  <div class="page-inner">
+    <h2 class="page-heading" id="accountTitle">هەژمار</h2>
 
-    <form id="productForm">
-      <input type="hidden" id="productId" />
+    <div class="lang-switch-row">
+      <button type="button" class="lang-btn active" id="langKuBtn">کوردی</button>
+      <button type="button" class="lang-btn" id="langArBtn">العربية</button>
+    </div>
 
-      <label data-i18n="productName">Product name
-        <input type="text" id="fieldName" required />
-      </label>
+    <!-- Guest view -->
+    <div class="account-card" id="guestLoginCard">
+      <h3 id="loginTitle">چوونەژوورەوەی بەڕێوەبەر</h3>
+      <form id="loginForm">
+        <div class="field">
+          <label id="lblEmail">ئیمەیل</label>
+          <input type="email" id="loginEmail" value="suhayb99@gmail.com" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label id="lblPassword">وشەی نهێنی</label>
+          <input type="password" id="loginPassword" value="1234Suhayb" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginSubmitBtn">چوونەژوورەوە</button>
+      </form>
+    </div>
 
-      <label data-i18n="category">Category
-        <input type="text" id="fieldCategory" list="categoryList" required data-i18n-placeholder="categoryPlaceholder" placeholder="e.g. Men, Women, Shoes" />
-        <datalist id="categoryList"></datalist>
-      </label>
-
-      <label data-i18n="price">Price (IQD)
-        <input type="number" id="fieldPrice" min="0" step="1" required />
-      </label>
-
-      <label data-i18n="description">Description
-        <textarea id="fieldDescription" rows="4" required></textarea>
-      </label>
-
-      <div class="form-row">
-        <label class="checkbox-label">
-          <input type="checkbox" id="fieldAvailability" checked />
-          <span data-i18n="inStock">In stock</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" id="fieldIsNew" />
-          <span data-i18n="markNew">Mark as New</span>
-        </label>
+    <!-- Admin view -->
+    <div class="account-card" id="adminSection" style="display:none;">
+      <div class="logged-in-row">
+        <div>
+          <h3 style="margin:0;" id="loggedInLabel">چووی ژوورەوە وەک بەڕێوەبەر</h3>
+          <div class="logged-in-email" id="loggedInEmail"></div>
+        </div>
+        <button type="button" class="btn btn-danger" id="logoutBtn" style="width:auto;padding:10px 16px;">دەرچوون</button>
       </div>
+    </div>
 
-      <label data-i18n="images">Images
-        <input type="file" id="fieldImages" accept="image/*" capture="environment" multiple />
-      </label>
-      <p class="field-hint" data-i18n="imagesHint">Choose from Camera or Photo Library. First image is the cover photo.</p>
+    <div class="account-card" id="productFormCard" style="display:none;">
+      <h3 id="formTitle">زیادکردنی کاڵا</h3>
+      <form id="productForm">
+        <div class="field">
+          <label id="lblImage">لینکی وێنه (URL)</label>
+          <div class="img-preview" id="imgPreview">وێنه لێرە دەردەکەوێت</div>
+          <input type="url" id="fImage" placeholder="https://i.ibb.co/xxxx.jpg" required>
+        </div>
+        <div class="field">
+          <label id="lblName">ناوی کاڵا <span class="req">*</span></label>
+          <input type="text" id="fName" required>
+        </div>
+        <div class="field">
+          <label id="lblCategory">جۆر / پۆل</label>
+          <div class="cat-row">
+            <select id="fCategory"></select>
+            <button type="button" id="addCatBtn">+</button>
+          </div>
+        </div>
+        <div class="field">
+          <label id="lblSection">شوێنی دەرکەوتن</label>
+          <div class="radio-row">
+            <label class="radio-opt selected" id="optMain">
+              <input type="radio" name="section" value="main" checked>
+              <span id="optMainText">بەشی سەرەکی</span>
+            </label>
+            <label class="radio-opt" id="optOffers">
+              <input type="radio" name="section" value="offers">
+              <span id="optOffersText">بەشی ئۆفەر</span>
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label id="lblPrice">نرخ (IQD) <span class="req">*</span></label>
+          <input type="number" id="fPrice" min="0" step="1" required>
+        </div>
+        <div class="field">
+          <label id="lblBadge">دیاریکەری بچووک (ئارەزوومەندانە، بۆ نموونە: 24 کاتژمێر)</label>
+          <input type="text" id="fBadge">
+        </div>
+        <div class="field">
+          <label id="lblDesc">تێبینی / وردەکاری</label>
+          <textarea id="fDesc"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">پاشگەزبوونەوه</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">پاشەکەوتکردن</button>
+        </div>
+      </form>
+    </div>
 
-      <div class="image-preview-grid" id="imagePreviewGrid"></div>
-
-      <div class="form-actions">
-        <button type="button" class="btn btn-ghost" id="cancelEditBtn" data-i18n="cancel">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="saveProductBtn" data-i18n="saveProduct">Save Product</button>
-      </div>
-      <p class="form-status" id="formStatus"></p>
-    </form>
+    <button type="button" class="btn btn-secondary" id="addProductToggleBtn" style="display:none;">
+      <span id="addProductToggleText">+ زیادکردنی کاڵای نوێ</span>
+    </button>
   </div>
 </div>
 
-<!-- Toast notifications -->
-<div class="toast" id="toast"></div>
+<!-- ===== Sticky bottom nav: Account | Cart | Home (right → left in RTL) ===== -->
+<nav class="bottom-nav">
+  <button class="nav-btn" id="navAccount" data-page="account">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span id="navAccountText">هەژمار</span>
+  </button>
+  <button class="nav-btn" id="navCart" data-page="cart">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span id="navCartText">سەبەتە</span>
+    <span class="badge" id="cartBadge" style="display:none;">0</span>
+  </button>
+  <button class="nav-btn active" id="navHome" data-page="home">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    <span id="navHomeText">سەرەکی</span>
+  </button>
+</nav>
 
-<!-- Firebase (must be a module) then app script -->
-<script type="module" src="firebase.js"></script>
-<script type="module" src="script.js"></script>
+<!-- ===== Firebase SDK (compat build, v12) ===== -->
+<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-database-compat.js"></script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ==========================================================
+     STATE — declared up top, independent of whether Firebase
+     ever successfully loads. This is what keeps page-switching,
+     tabs, search, and the cart fully working even if the
+     database connection fails.
+  ========================================================== */
+  const K_LANG = 'alaqi_lang_v2';
+  let lang = localStorage.getItem(K_LANG) || 'ku';
+  let currentPage = 'home'; // 'home' | 'cart' | 'account'
+  let currentSection = 'main';
+  let currentCategory = 'all';
+  let searchTerm = '';
+  let editingId = null;
+  let isAdmin = false;
+
+  let productsCache = [];
+  let productsLoaded = false;
+  let categoriesCache = [];
+  let cart = []; // [{id, name, price, image, qty}]
+
+  const WHATSAPP_NUMBER = '9647704917319';
+
+  const T = {
+    ku: {
+      tabMain:'بەشی سەرەکی', tabOffers:'بەشی ئۆفەر', allCat:'هەمووی',
+      searchPlaceholder:'گەڕان بۆ کاڵا...',
+      navHomeText:'سەرەکی', navCartText:'سەبەتە', navAccountText:'هەژمار',
+      accountTitle:'هەژمار',
+      formTitleAdd:'زیادکردنی کاڵا', formTitleEdit:'دەستکاریکردنی کاڵا',
+      lblImage:'لینکی وێنه (URL)', imgPreviewText:'وێنه لێرە دەردەکەوێت',
+      lblName:'ناوی کاڵا', lblCategory:'جۆر / پۆل', lblSection:'شوێنی دەرکەوتن',
+      optMainText:'بەشی سەرەکی', optOffersText:'بەشی ئۆفەر',
+      lblPrice:'نرخ (IQD)', lblBadge:'دیاریکەری بچووک (ئارەزوومەندانە، بۆ نموونە: 24 کاتژمێر)',
+      lblDesc:'تێبینی / وردەکاری',
+      cancelBtn:'پاشگەزبوونەوه', saveBtn:'پاشەکەوتکردن',
+      newCatPrompt:'ناوی پۆلی نوێ بنووسه', confirmDelete:'دڵنیایت لە سڕینەوەی ئەم کاڵایه؟',
+      emptyText:'هیچ کاڵایەک نییه', noResults:'هیچ ئەنجامێک نەدۆزرایەوه', loadingText:'بارکردن...',
+      uncategorized:'بێ پۆل', currency:'IQD',
+      loginTitle:'چوونەژوورەوەی بەڕێوەبەر', lblEmail:'ئیمەیل', lblPassword:'وشەی نهێنی',
+      loginSubmitBtn:'چوونەژوورەوە', loginError:'ئیمەیل یان وشەی نهێنی هەڵەیه',
+      pleaseLogin:'تکایە سەرەتا بچووە ژوورەوە', errorPrefix:'هەڵەیەک ڕوویدا: ',
+      cartTitle:'سەبەتەی کڕین', cartTotalLabel:'کۆی گشتی', cartEmpty:'سەبەتەکەت بەتاڵە',
+      orderWa:'داواکردن لە ڕێی واتساپ',
+      dbErrorMsg:'کێشەیەک لە بەستنەوەی داتابەیس ڕوویدا. تکایە ئینتەرنێت بپشکنە.',
+      loggedInLabel:'چووی ژوورەوە وەک بەڕێوەبەر', logoutBtn:'دەرچوون',
+      addProductToggleText:'+ زیادکردنی کاڵای نوێ'
+    },
+    ar: {
+      tabMain:'الرئيسية', tabOffers:'العروض', allCat:'الكل',
+      searchPlaceholder:'ابحث عن منتج...',
+      navHomeText:'الرئيسية', navCartText:'السلة', navAccountText:'الحساب',
+      accountTitle:'الحساب',
+      formTitleAdd:'إضافة منتج', formTitleEdit:'تعديل المنتج',
+      lblImage:'رابط الصورة (URL)', imgPreviewText:'ستظهر الصورة هنا',
+      lblName:'اسم المنتج', lblCategory:'الفئة', lblSection:'مكان الظهور',
+      optMainText:'الرئيسية', optOffersText:'العروض',
+      lblPrice:'السعر (IQD)', lblBadge:'شارة صغيرة (اختياري، مثال: 24 ساعة)',
+      lblDesc:'ملاحظات / تفاصيل',
+      cancelBtn:'إلغاء', saveBtn:'حفظ',
+      newCatPrompt:'اكتب اسم الفئة الجديدة', confirmDelete:'هل أنت متأكد من حذف هذا المنتج؟',
+      emptyText:'لا توجد منتجات', noResults:'لا توجد نتائج', loadingText:'جارٍ التحميل...',
+      uncategorized:'بدون فئة', currency:'IQD',
+      loginTitle:'دخول المسؤول', lblEmail:'البريد الإلكتروني', lblPassword:'كلمة المرور',
+      loginSubmitBtn:'تسجيل الدخول', loginError:'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+      pleaseLogin:'يرجى تسجيل الدخول أولاً', errorPrefix:'حدث خطأ: ',
+      cartTitle:'سلة المشتريات', cartTotalLabel:'المجموع الكلي', cartEmpty:'سلتك فارغة',
+      orderWa:'اطلب عبر واتساب',
+      dbErrorMsg:'حدث خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من الإنترنت.',
+      loggedInLabel:'مسجل الدخول كمسؤول', logoutBtn:'تسجيل الخروج',
+      addProductToggleText:'+ إضافة منتج جديد'
+    }
+  };
+
+  function fmt(n){
+    if(n === null || n === undefined || n === '') return null;
+    return Number(n).toLocaleString('en-US');
+  }
+  function escapeHtml(str){
+    if(str === undefined || str === null) return '';
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  /* ============ Broken image fallback ============ */
+  const PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="#EAF2FB"/><g fill="none" stroke="#9DB8D2" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><rect x="70" y="90" width="260" height="200" rx="16"/><circle cx="150" cy="150" r="20"/><path d="M70 250l70-70 50 50 60-80 80 100"/></g></svg>`;
+  const PLACEHOLDER_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(PLACEHOLDER_SVG);
+  window.handleImgError = function(el){
+    el.onerror = null;
+    el.src = PLACEHOLDER_IMG;
+    el.style.objectFit = 'contain';
+    el.style.padding = '14%';
+  };
+
+  /* ============ imgbb / ibb.co link normalizer ============ */
+  function normalizeImageUrl(url){
+    if(!url) return url;
+    const trimmed = url.trim();
+    let u;
+    try{ u = new URL(trimmed); }catch(e){ return trimmed; }
+    const host = u.hostname.replace(/^www\./,'');
+    if(host === 'i.ibb.co') return trimmed;
+    if(host === 'ibb.co') return 'https://i.ibb.co' + u.pathname + u.search;
+    if(host === 'imgbb.com' && u.pathname.startsWith('/image/')){
+      return 'https://i.ibb.co' + u.pathname.replace('/image', '') + u.search;
+    }
+    return trimmed;
+  }
+
+  /* ==========================================================
+     i18n
+  ========================================================== */
+  function applyLang(){
+    const dict = T[lang];
+    document.getElementById('tabMain').textContent = dict.tabMain;
+    document.getElementById('tabOffers').textContent = dict.tabOffers;
+    document.getElementById('searchInput').placeholder = dict.searchPlaceholder;
+    document.getElementById('navHomeText').textContent = dict.navHomeText;
+    document.getElementById('navCartText').textContent = dict.navCartText;
+    document.getElementById('navAccountText').textContent = dict.navAccountText;
+    document.getElementById('accountTitle').textContent = dict.accountTitle;
+    document.getElementById('lblImage').innerHTML = dict.lblImage;
+    document.getElementById('imgPreview').textContent = dict.imgPreviewText;
+    document.getElementById('lblName').innerHTML = dict.lblName + ' <span class="req">*</span>';
+    document.getElementById('lblCategory').textContent = dict.lblCategory;
+    document.getElementById('lblSection').textContent = dict.lblSection;
+    document.getElementById('optMainText').textContent = dict.optMainText;
+    document.getElementById('optOffersText').textContent = dict.optOffersText;
+    document.getElementById('lblPrice').innerHTML = dict.lblPrice + ' <span class="req">*</span>';
+    document.getElementById('lblBadge').textContent = dict.lblBadge;
+    document.getElementById('lblDesc').textContent = dict.lblDesc;
+    document.getElementById('cancelBtn').textContent = dict.cancelBtn;
+    document.getElementById('saveBtn').textContent = dict.saveBtn;
+    document.getElementById('loginTitle').textContent = dict.loginTitle;
+    document.getElementById('lblEmail').textContent = dict.lblEmail;
+    document.getElementById('lblPassword').textContent = dict.lblPassword;
+    document.getElementById('loginSubmitBtn').textContent = dict.loginSubmitBtn;
+    document.getElementById('cartTitle').textContent = dict.cartTitle;
+    document.getElementById('cartTotalLabel').textContent = dict.cartTotalLabel;
+    document.getElementById('cartOrderWa').textContent = dict.orderWa;
+    document.getElementById('loggedInLabel').textContent = dict.loggedInLabel;
+    document.getElementById('logoutBtn').textContent = dict.logoutBtn;
+    document.getElementById('addProductToggleText').textContent = dict.addProductToggleText;
+    document.getElementById('formTitle').textContent = editingId ? dict.formTitleEdit : dict.formTitleAdd;
+    document.getElementById('langKuBtn').classList.toggle('active', lang === 'ku');
+    document.getElementById('langArBtn').classList.toggle('active', lang === 'ar');
+    renderCatChips();
+    localStorage.setItem(K_LANG, lang);
+  }
+
+  /* ==========================================================
+     Category chips + form select rendering
+  ========================================================== */
+  function renderCatChips(){
+    const dict = T[lang];
+    const wrap = document.getElementById('catScroll');
+    const chips = ['<button class="cat-chip' + (currentCategory==='all'?' active':'') + '" data-cat="all">' + escapeHtml(dict.allCat) + '</button>']
+      .concat(categoriesCache.map(c => `<button class="cat-chip${currentCategory===c?' active':''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`));
+    wrap.innerHTML = chips.join('');
+  }
+  function renderCategorySelect(selectedValue){
+    const sel = document.getElementById('fCategory');
+    const dict = T[lang];
+    sel.innerHTML = '<option value="">' + dict.uncategorized + '</option>' +
+      categoriesCache.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    if(selectedValue) sel.value = selectedValue;
+  }
+
+  /* ==========================================================
+     Product grid rendering (Home page)
+     Cards: clicking the image/title does nothing — only the +
+     button is interactive, per spec.
+  ========================================================== */
+  function renderGrid(){
+    const dict = T[lang];
+    const grid = document.getElementById('grid');
+    if(!productsLoaded){
+      grid.innerHTML = `<div class="empty-state"><p>${dict.loadingText}</p></div>`;
+      return;
+    }
+    let list = productsCache.filter(p => p.section === currentSection);
+    if(currentCategory !== 'all'){
+      list = list.filter(p => p.category === currentCategory);
+    }
+    if(searchTerm.trim()){
+      const q = searchTerm.trim().toLowerCase();
+      list = list.filter(p => (p.name || '').toLowerCase().includes(q));
+    }
+    if(list.length === 0){
+      grid.innerHTML = `<div class="empty-state">
+        <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 21V13h6v8"/></svg>
+        <p>${searchTerm.trim() ? dict.noResults : dict.emptyText}</p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = list.map(p => cardHtml(p, dict)).join('');
+  }
+
+  function cardHtml(p, dict){
+    const priceClass = p.section === 'offers' ? 'card-price offer' : 'card-price';
+    const img = p.image ? escapeHtml(p.image) : '';
+    const badgeRow = p.badge ? `
+      <div class="card-badge-row">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>${escapeHtml(p.badge)}</span>
+      </div>` : '';
+    const adminActions = isAdmin ? `
+        <div class="card-admin-actions">
+          <button class="mini-btn edit" data-edit="${p.id}" aria-label="edit">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="mini-btn delete" data-delete="${p.id}" aria-label="delete">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>` : '';
+    return `
+    <div class="card">
+      <div class="card-media">
+        <img src="${img}" alt="${escapeHtml(p.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="handleImgError(this)">
+        ${adminActions}
+      </div>
+      <div class="card-title">${escapeHtml(p.name)}</div>
+      ${badgeRow}
+      <div class="card-bottom-row">
+        <span class="${priceClass}">${fmt(p.price)} ${dict.currency}</span>
+        <button class="card-add-btn" data-addcart="${p.id}" aria-label="add to cart">+</button>
+      </div>
+    </div>`;
+  }
+
+  /* ==========================================================
+     Cart
+  ========================================================== */
+  function updateCartBadge(){
+    const totalQty = cart.reduce((sum, it) => sum + it.qty, 0);
+    const badge = document.getElementById('cartBadge');
+    if(totalQty > 0){
+      badge.style.display = 'flex';
+      badge.textContent = totalQty > 99 ? '99+' : String(totalQty);
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+  function addToCart(id){
+    const p = productsCache.find(x => x.id === id);
+    if(!p) return;
+    const existing = cart.find(it => it.id === id);
+    if(existing){
+      existing.qty += 1;
+    } else {
+      cart.push({ id: p.id, name: p.name, price: Number(p.price) || 0, image: p.image || '', qty: 1 });
+    }
+    updateCartBadge();
+    if(currentPage === 'cart') renderCart();
+  }
+  function changeQty(id, delta){
+    const item = cart.find(it => it.id === id);
+    if(!item) return;
+    item.qty += delta;
+    if(item.qty <= 0){
+      cart = cart.filter(it => it.id !== id);
+    }
+    updateCartBadge();
+    renderCart();
+  }
+  function removeFromCart(id){
+    cart = cart.filter(it => it.id !== id);
+    updateCartBadge();
+    renderCart();
+  }
+  function cartTotal(){
+    return cart.reduce((sum, it) => sum + (it.price * it.qty), 0);
+  }
+  function renderCart(){
+    const dict = T[lang];
+    const list = document.getElementById('cartList');
+    if(cart.length === 0){
+      list.innerHTML = `<div class="cart-empty">${dict.cartEmpty}</div>`;
+    } else {
+      list.innerHTML = cart.map(it => `
+        <div class="cart-item">
+          <img src="${escapeHtml(it.image)}" referrerpolicy="no-referrer" onerror="handleImgError(this)">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${escapeHtml(it.name)}</div>
+            <div class="cart-item-price">${fmt(it.price)} ${dict.currency}</div>
+          </div>
+          <div class="qty-stepper">
+            <button class="qty-btn" data-qty-minus="${it.id}">−</button>
+            <span class="qty-val">${it.qty}</span>
+            <button class="qty-btn" data-qty-plus="${it.id}">+</button>
+          </div>
+          <button class="cart-remove-btn" data-cart-remove="${it.id}" aria-label="remove">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>`).join('');
+    }
+    document.getElementById('cartTotalValue').textContent = fmt(cartTotal()) + ' ' + dict.currency;
+  }
+  function buildWhatsAppUrl(items, total){
+    const dict = T[lang];
+    const lines = items.map((it, i) => `${i+1}. ${it.name} - ${it.qty} × ${fmt(it.price)} ${dict.currency} = ${fmt(it.price*it.qty)} ${dict.currency}`);
+    const header = lang === 'ku' ? 'داواکردنی کاڵا لە ماڵی عەلاقی:' : 'طلب من ماڵی عەلاقی:';
+    const totalLine = (lang === 'ku' ? 'کۆی گشتی' : 'المجموع الكلي') + `: ${fmt(total)} ${dict.currency}`;
+    const message = header + '\n\n' + lines.join('\n') + '\n\n' + totalLine;
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  }
+
+  /* ==========================================================
+     Page switching (bottom nav)
+  ========================================================== */
+  function goToPage(page){
+    currentPage = page;
+    document.getElementById('pageHome').classList.toggle('active', page === 'home');
+    document.getElementById('pageCart').classList.toggle('active', page === 'cart');
+    document.getElementById('pageAccount').classList.toggle('active', page === 'account');
+    document.getElementById('navHome').classList.toggle('active', page === 'home');
+    document.getElementById('navCart').classList.toggle('active', page === 'cart');
+    document.getElementById('navAccount').classList.toggle('active', page === 'account');
+    if(page === 'cart') renderCart();
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+  document.getElementById('navHome').addEventListener('click', () => goToPage('home'));
+  document.getElementById('navCart').addEventListener('click', () => goToPage('cart'));
+  document.getElementById('navAccount').addEventListener('click', () => goToPage('account'));
+
+  /* ==========================================================
+     Firebase (Realtime Database + Auth)
+     Resilience: every piece of pure UI wiring in this file works
+     standalone. If Firebase fails to load or init, it's caught
+     here and reported inline — it will NOT take down page
+     switching, tabs, search, or the cart, since none of those
+     depend on this block having succeeded.
+  ========================================================== */
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "YOUR_DATABASE_URL", // e.g. https://your-project-default-rtdb.firebaseio.com
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  let auth = null;
+  let db = null;
+  let productsRef = null;
+  let categoriesRef = null;
+  let firebaseReady = false;
+
+  function addProductToDb(data){
+    if(!firebaseReady) return Promise.reject(new Error(T[lang].dbErrorMsg));
+    return productsRef.push({ ...data, createdAt: firebase.database.ServerValue.TIMESTAMP });
+  }
+  function updateProductInDb(id, data){
+    if(!firebaseReady) return Promise.reject(new Error(T[lang].dbErrorMsg));
+    return productsRef.child(id).update(data);
+  }
+  function deleteProductFromDb(id){
+    if(!firebaseReady) return Promise.reject(new Error(T[lang].dbErrorMsg));
+    return productsRef.child(id).remove();
+  }
+  function addCategoryToDb(name){
+    if(!firebaseReady) return Promise.reject(new Error(T[lang].dbErrorMsg));
+    const safeKey = name.replace(/[.#$\[\]/]/g, '_');
+    return categoriesRef.child(safeKey).set(name);
+  }
+
+  function updateAuthUI(){
+    document.getElementById('guestLoginCard').style.display = isAdmin ? 'none' : 'block';
+    document.getElementById('adminSection').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('addProductToggleBtn').style.display = isAdmin ? 'block' : 'none';
+    if(!isAdmin){
+      document.getElementById('productFormCard').style.display = 'none';
+    }
+    if(isAdmin && auth && auth.currentUser){
+      document.getElementById('loggedInEmail').textContent = auth.currentUser.email || '';
+    }
+  }
+
+  try{
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.database();
+    productsRef = db.ref('products');
+    categoriesRef = db.ref('categories');
+    firebaseReady = true;
+
+    auth.onAuthStateChanged((user) => {
+      isAdmin = !!user;
+      updateAuthUI();
+      renderGrid();
+    });
+
+    productsRef.on('value', (snapshot) => {
+      const val = snapshot.val() || {};
+      const docs = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+      docs.sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+      productsCache = docs;
+      productsLoaded = true;
+      renderGrid();
+    }, (err) => {
+      console.error('Realtime Database products error:', err);
+      productsLoaded = true;
+      renderGrid();
+    });
+
+    categoriesRef.on('value', (snapshot) => {
+      const val = snapshot.val() || {};
+      categoriesCache = Object.values(val);
+      renderCatChips();
+    }, (err) => {
+      console.error('Realtime Database categories error:', err);
+    });
+  }catch(err){
+    console.error('Firebase failed to initialize:', err);
+    firebaseReady = false;
+    productsLoaded = true; // stop showing an infinite loading state
+  }
+
+  /* ==========================================================
+     Add/Edit form (lives inside the Account page)
+  ========================================================== */
+  function openForm(id){
+    if(!isAdmin){
+      alert(T[lang].pleaseLogin);
+      return;
+    }
+    if(id && String(id).indexOf('temp_') === 0){
+      alert(lang === 'ku' ? 'تکایە چاوەڕێ بکە، کاڵاکە هێشتا پاشەکەوت دەکرێت...' : 'يرجى الانتظار، جارٍ حفظ المنتج...');
+      return;
+    }
+    editingId = id || null;
+    const dict = T[lang];
+    document.getElementById('formTitle').textContent = editingId ? dict.formTitleEdit : dict.formTitleAdd;
+    const form = document.getElementById('productForm');
+    form.reset();
+    renderCategorySelect();
+    setSection('main');
+    document.getElementById('imgPreview').innerHTML = dict.imgPreviewText;
+
+    if(editingId){
+      const p = productsCache.find(x => x.id === editingId);
+      if(p){
+        document.getElementById('fImage').value = p.image || '';
+        document.getElementById('fName').value = p.name || '';
+        renderCategorySelect(p.category || '');
+        setSection(p.section || 'main');
+        document.getElementById('fPrice').value = p.price ?? '';
+        document.getElementById('fBadge').value = p.badge || '';
+        document.getElementById('fDesc').value = p.desc || '';
+        updateImgPreview();
+      }
+    }
+    document.getElementById('productFormCard').style.display = 'block';
+    goToPage('account');
+  }
+  function closeForm(){
+    document.getElementById('productFormCard').style.display = 'none';
+    editingId = null;
+  }
+  function setSection(val){
+    const main = document.getElementById('optMain');
+    const offers = document.getElementById('optOffers');
+    main.classList.toggle('selected', val === 'main');
+    offers.classList.toggle('selected', val === 'offers');
+    main.querySelector('input').checked = val === 'main';
+    offers.querySelector('input').checked = val === 'offers';
+  }
+  function updateImgPreview(){
+    const raw = document.getElementById('fImage').value.trim();
+    const url = normalizeImageUrl(raw);
+    const box = document.getElementById('imgPreview');
+    const dict = T[lang];
+    if(url){
+      box.innerHTML = `<img src="${escapeHtml(url)}" referrerpolicy="no-referrer" onerror="handleImgError(this)">`;
+    } else {
+      box.textContent = dict.imgPreviewText;
+    }
+  }
+
+  async function deleteProduct(id){
+    const dict = T[lang];
+    if(!isAdmin){ alert(dict.pleaseLogin); return; }
+    if(String(id).indexOf('temp_') === 0){
+      alert(lang === 'ku' ? 'تکایە چاوەڕێ بکە، کاڵاکە هێشتا پاشەکەوت دەکرێت...' : 'يرجى الانتظار، جارٍ حفظ المنتج...');
+      return;
+    }
+    if(!confirm(dict.confirmDelete)) return;
+    try{
+      await deleteProductFromDb(id);
+    }catch(err){
+      alert(dict.errorPrefix + err.message);
+    }
+  }
+
+  /* ==========================================================
+     Event wiring — ALL delegated from static, always-present
+     ancestor elements, bound immediately (no dependency on
+     Firebase or on dynamically rendered content existing yet).
+  ========================================================== */
+
+  // Section tabs
+  document.getElementById('tabMain').addEventListener('click', () => setActiveSection('main'));
+  document.getElementById('tabOffers').addEventListener('click', () => setActiveSection('offers'));
+  function setActiveSection(section){
+    currentSection = section;
+    document.getElementById('tabMain').classList.toggle('active', section === 'main');
+    document.getElementById('tabOffers').classList.toggle('active', section === 'offers');
+    renderGrid();
+  }
+
+  // Category chips (delegated — chips are re-rendered dynamically)
+  document.getElementById('catScroll').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-cat]');
+    if(!btn) return;
+    currentCategory = btn.getAttribute('data-cat');
+    renderCatChips();
+    renderGrid();
+  });
+
+  // Search
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    searchTerm = e.target.value;
+    renderGrid();
+  });
+
+  // Grid actions (delegated). Per spec: image/title clicks do nothing —
+  // only the + (add to cart) and admin-only edit/delete icons are wired.
+  document.getElementById('grid').addEventListener('click', (e) => {
+    const cartBtn = e.target.closest('[data-addcart]');
+    if(cartBtn){ addToCart(cartBtn.getAttribute('data-addcart')); return; }
+    const editBtn = e.target.closest('[data-edit]');
+    if(editBtn){ openForm(editBtn.getAttribute('data-edit')); return; }
+    const delBtn = e.target.closest('[data-delete]');
+    if(delBtn){ deleteProduct(delBtn.getAttribute('data-delete')); return; }
+  });
+
+  // Cart page actions (delegated)
+  document.getElementById('cartList').addEventListener('click', (e) => {
+    const plus = e.target.closest('[data-qty-plus]');
+    if(plus){ changeQty(plus.getAttribute('data-qty-plus'), 1); return; }
+    const minus = e.target.closest('[data-qty-minus]');
+    if(minus){ changeQty(minus.getAttribute('data-qty-minus'), -1); return; }
+    const rm = e.target.closest('[data-cart-remove]');
+    if(rm){ removeFromCart(rm.getAttribute('data-cart-remove')); return; }
+  });
+  document.getElementById('cartOrderWa').addEventListener('click', () => {
+    if(cart.length === 0) return;
+    const url = buildWhatsAppUrl(cart, cartTotal());
+    window.open(url, '_blank');
+  });
+
+  // Language switch (Account page)
+  document.getElementById('langKuBtn').addEventListener('click', () => {
+    lang = 'ku'; applyLang(); renderGrid(); renderCart();
+  });
+  document.getElementById('langArBtn').addEventListener('click', () => {
+    lang = 'ar'; applyLang(); renderGrid(); renderCart();
+  });
+
+  // Login / Logout
+  document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const dict = T[lang];
+    if(!firebaseReady || !auth){
+      alert(dict.dbErrorMsg);
+      return;
+    }
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const btn = document.getElementById('loginSubmitBtn');
+    btn.disabled = true;
+    auth.signInWithEmailAndPassword(email, password)
+      .catch((err) => {
+        console.error('Login error:', err);
+        alert(dict.loginError);
+      })
+      .finally(() => { btn.disabled = false; });
+  });
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    if(auth) auth.signOut();
+  });
+
+  // Add-product toggle button (Account page)
+  document.getElementById('addProductToggleBtn').addEventListener('click', () => {
+    const card = document.getElementById('productFormCard');
+    if(card.style.display === 'block'){
+      closeForm();
+    } else {
+      openForm(null);
+    }
+  });
+  document.getElementById('cancelBtn').addEventListener('click', closeForm);
+  document.getElementById('optMain').addEventListener('click', () => setSection('main'));
+  document.getElementById('optOffers').addEventListener('click', () => setSection('offers'));
+  document.getElementById('fImage').addEventListener('input', updateImgPreview);
+
+  document.getElementById('addCatBtn').addEventListener('click', async () => {
+    const dict = T[lang];
+    const raw = prompt(dict.newCatPrompt);
+    const name = raw ? raw.trim() : '';
+    if(!name) return;
+    const btn = document.getElementById('addCatBtn');
+    btn.disabled = true;
+    try{
+      await addCategoryToDb(name);
+      if(!categoriesCache.includes(name)){
+        categoriesCache = [...categoriesCache, name];
+      }
+      renderCategorySelect(name);
+      renderCatChips();
+    }catch(err){
+      alert(dict.errorPrefix + err.message);
+    }finally{
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('productForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const dict = T[lang];
+    if(!isAdmin){ alert(dict.pleaseLogin); return; }
+    const section = document.querySelector('input[name="section"]:checked').value;
+    const data = {
+      name: document.getElementById('fName').value.trim(),
+      image: normalizeImageUrl(document.getElementById('fImage').value.trim()),
+      category: document.getElementById('fCategory').value,
+      section: section,
+      price: Number(document.getElementById('fPrice').value) || 0,
+      badge: document.getElementById('fBadge').value.trim(),
+      desc: document.getElementById('fDesc').value.trim()
+    };
+    if(!data.name || !data.price){
+      alert(dict.errorPrefix + (lang === 'ku' ? 'ناو و نرخ پێویستن' : 'الاسم والسعر مطلوبان'));
+      return;
+    }
+
+    const isEditing = !!editingId;
+    const targetId = editingId;
+    let previousEntry = null;
+    let tempId = null;
+
+    // Optimistic UI update — reflect the change instantly, don't wait on the network
+    if(isEditing){
+      const idx = productsCache.findIndex(p => p.id === targetId);
+      if(idx > -1){
+        previousEntry = { ...productsCache[idx] };
+        productsCache = productsCache.map(p => p.id === targetId ? { ...p, ...data } : p);
+      }
+    } else {
+      tempId = 'temp_' + Date.now() + '_' + Math.random().toString(16).slice(2);
+      productsCache = [{ id: tempId, ...data }, ...productsCache];
+    }
+    setActiveSection(section);
+    closeForm();
+
+    // Sync to the database in the background; roll back only if it actually fails
+    const request = isEditing ? updateProductInDb(targetId, data) : addProductToDb(data);
+    request.catch((err) => {
+      if(isEditing && previousEntry){
+        productsCache = productsCache.map(p => p.id === targetId ? previousEntry : p);
+      } else if(tempId){
+        productsCache = productsCache.filter(p => p.id !== tempId);
+      }
+      renderGrid();
+      alert(dict.errorPrefix + err.message);
+    });
+  });
+
+  /* ============ Init ============ */
+  applyLang();
+  setActiveSection('main');
+  renderGrid();
+  updateCartBadge();
+  goToPage('home');
+})();
+</script>
 </body>
 </html>
